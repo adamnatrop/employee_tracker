@@ -1,0 +1,32 @@
+{
+  "name": "employee_tracker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "directories": {
+    "lib": "lib",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adamnatrop/employee_tracker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adamnatrop/employee_tracker/issues"
+  },
+  "homepage": "https://github.com/adamnatrop/employee_tracker#readme",
+  "devDependencies": {
+    "mysql": "^2.18.1"
+  },
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "inquirer": "^8.0.0"
+  }
+}
