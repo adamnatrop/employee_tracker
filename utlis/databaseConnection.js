@@ -1,5 +1,5 @@
 const mysql = require('mysql');
-const {config} = require('./creds');
+const {config} = require('../config/creds');
 const {queries} = require('./queries');
 
 

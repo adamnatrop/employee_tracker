@@ -13,6 +13,28 @@ const rolesQuery = connectDb.getQuery(queries.roles, function(result){
     })
 });
 
+const managers = [];
+const managersName = [];
+const managerQuery = connectDb.getQuery(queries.getAllManagers, function(result){
+    result.forEach(function(item, index){
+        managers.push(item);
+        let manager = Object.values(item).join(' ')
+        managersName.push(manager)
+    })
+})
+
+
+const employees = [];
+const employeesName = [];
+const employeeQuery = connectDb.getQuery(queries.allEmployees, function(result){
+    result.forEach(function(item, index){
+        employees.push(item);
+        let employee = Object.values(`${item.first_name} ${item.last_name}`).join('')
+        employeesName.push(employee)
+        
+    })
+    
+})
 
 
 const initQuestion = [
@@ -20,7 +42,7 @@ const initQuestion = [
         type: 'list',
         message: 'What would you like to do?',
         name: 'response',
-        choices: ['View All Employees', 'View Employees by department', 'View Employees by Manager', 'Add Employee', 'Remove Employee', 'View All Roles', 'Add role', 'Remove role', 'View Departments', 'Remove Department', 'Quit']
+        choices: ['View All Employees', 'View Employees by department', 'View Employees by Manager', 'Add Employee', 'Remove Employee', 'View All Roles', 'Add role', 'Remove role', 'Update Employee Role', 'View Departments', 'Remove Department', 'Quit']
 
     },
 ];
@@ -44,6 +66,24 @@ const addEmployeeQuestions = [
     },
 ];
 
+const selectManagerQuest = [
+    {
+        type: 'list',
+        message: 'Select Manager',
+        name: 'manager',
+        choices: managersName
+    
+    },
+];
+
+const selectEmployeeQuest = [
+    {
+        type: 'list',
+        message: 'Select Employee to Remove',
+        name: 'employee',
+        choices: employeesName
+    }
+]
 
 async function start(){
     inquirer.prompt(initQuestion).then(async res => {
@@ -63,6 +103,7 @@ async function start(){
 
             case 'View Employees by Manager':
                 console.log('Selected View Employees by Manager');
+                selectManager();
                 break;
 
             case 'Add Employee':
@@ -72,8 +113,12 @@ async function start(){
 
             case 'Remove Employee':
                 console.log('Selected Remove Employee');
+                selectEmployeeRemove();
                 break;
 
+            case 'Update Employee Role':
+                selectEmployee();
+                break;
             case 'View All Roles':
                 connectDb.getQuery(queries.viewAllRoles, function(result){
                     displayResults(result);
@@ -87,7 +132,7 @@ async function start(){
             case 'Remove role':
                 console.log('Selected Remove role');
                 break;
-
+            
             case 'View Departments':
                 connectDb.getQuery(queries.viewAllRoles, function(result){
                     displayResults(result);
@@ -135,10 +180,93 @@ function checkRoleMatch(res, callback){
     });
 };
 
+function checkEmployeeMatch(employee, callback){
+    employees.forEach(function(item, index){
+        if (`${item.first_name} ${item.last_name}` == employee.employee){
+            let employ_id = item.employ_id
+            return callback(employ_id)
+        };
+    });
+};
+
 function displayResults(resp){
     console.table(resp);
     start();
 };
+
+
+async function selectManager(){
+    await inquirer.prompt(selectManagerQuest).then(res => {
+        console.log("SUCCESS SELECTED MANAGER", res)
+    })
+}
+
+async function selectEmployeeRemove(){
+    await inquirer.prompt(selectEmployeeQuest).then(res => {
+        // let employ_id = ''
+        checkEmployeeMatch(res, function(result){
+            let employ_id = result;
+            removeEmployee(employ_id);
+            //return employ_id;
+        });
+        
+    })
+}
+
+async function selectEmployee(){
+    await inquirer.prompt(selectEmployeeQuest).then(res => {
+        // let employ_id = ''
+        checkEmployeeMatch(res, function(result){
+            let employ_id = result;
+            selectEmployeeRole(employ_id);
+            //return employ_id;
+        });
+        
+    })
+}
+
+async function selectEmployeeRole(employ_id){
+    await inquirer.prompt(
+        {
+            type: 'list',
+            message: 'Select Role:',
+            name: 'role',
+            choices: rolesTitle
+        }
+    ).then(async res => {
+
+        let role_id = '';
+        await checkRoleMatch(res, function(result){
+            role_id = result;
+            return role_id;
+        });
+        updateEmployeeRole(employ_id, role_id);
+    })
+}
+
+async function updateEmployeeRole(employ_id, role_id){
+    
+    await connectDb.getQuery(`UPDATE employee SET role_id = ${role_id} WHERE employ_id = ${employ_id}`, function(err, result){
+        console.log('--------------');
+        console.log("Employee Updated!");
+        console.log('--------------');
+        start();
+    });
+
+
+
+}
+
+async function removeEmployee(employ_id, ){
+    console.log(employ_id)
+    connectDb.getQuery(`${queries.removeEmployee} ${employ_id}`, function(result){
+    console.log('--------------');
+    console.log("Employee Removed!");
+    console.log('--------------');
+    start();
+    });
+}
+
 
 function init(){
     start();

@@ -13,7 +13,18 @@ module.exports = {
 
         roles: `SELECT role_id, title FROM employee_role`,
 
-        addEmployee: `INSERT INTO employee (role_id, first_name, last_name) VALUES `
+        addEmployee: `INSERT INTO employee (role_id, first_name, last_name) VALUES `,
+
+        getAllManagers: `SELECT e.first_name, e.last_name
+                        FROM employee e
+                        INNER JOIN employee_role r
+                        USING (role_id)
+                        WHERE r.is_manager = TRUE
+                        `,
+        
+        removeEmployee: `DELETE FROM employee WHERE employee.employ_id = `,
+
+        
 
                 },
 }
