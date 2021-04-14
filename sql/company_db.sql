@@ -60,4 +60,15 @@ INSERT INTO employee (role_id, first_name, last_name)
 VALUES 
     (1010, "Steve", "Jobs"),
     (2010, "Johny", "Ives"),
-    (2020, "Sam", "Rami");
+    (2020, "Sam", "Rami"),
+    (2030, "Jim", "Bo"),
+    (2030, "Adam", "Savage"),
+    (2030, "Josh", "Mun"),
+    (2030, "Emily", "Ebert"),
+    (5010, "Eric", "Fun"),
+    (5020, "Sarah", "Smart"),
+    (5020, "Stewart", "Little"),
+    (3010, "Mark", "Johnson"),
+    (3030, "Michael", "Jorden"),
+    (3020, "Sam", "Jack"),
+    (3030, "Ashley", "Sampson");

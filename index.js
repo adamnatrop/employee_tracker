@@ -196,9 +196,6 @@ async function start(){
 
             case 'Quit':
                 connectDb.quit();
-
-           
-
         };
     });
 };
@@ -213,7 +210,6 @@ async function removeDepartQuest(){
     }).then( async (res) => {
         await checkDepartMatchRemove(res, function(result){
             let depart_id = result;
-            console.log(depart_id)
             removeDepartment(depart_id);
         })
     })
@@ -230,7 +226,6 @@ async function removeDepartment(depart_id){
 
 
 function checkDepartMatchRemove(res, callback){
-    console.log(res)
     departments.forEach(function(item, index){
         if (item.depart_name == res.removeDepartment){
             let depart_id = item.depart_id;
@@ -266,19 +261,15 @@ async function addDepartment(depart_id, depart_name){
 
 
 async function selectRoleToRemove(){
-    await inquirer.prompt(removeRoleQuest).then(async (res) => {
-        // let role_id = '';
+    await inquirer.prompt(removeRoleQuest).then(async (res) => { 
         await checkRoleMatchRemove(res, function(result){
             let role_id = result;
-            console.log(role_id)
-            // return role_id;
             removeRole(role_id)
         });
     })
 }
 
 async function removeRole(role_id){
-
     await connectDb.getQuery(`${queries.removeRole} ${role_id}`, function(result){
         console.log('--------------');
         console.log("Role Removed!");
@@ -308,11 +299,9 @@ async function selectDepartment(){
 };
 
 async function getLastRoleId(depart_id){
-    
     await connectDb.getQuery(queries.getLastRoleId, function(result){
         lastRoleId = result[0];
-        addRole(lastRoleId, depart_id)
-        
+        addRole(lastRoleId, depart_id)  
     });
 }
 
@@ -334,9 +323,7 @@ async function addRole(lastRoleId, depart_id){
 
 
 function checkDepartMatch(res, callback){
-    
-    departments.forEach(function(item, index){
-        
+    departments.forEach(function(item, index){  
         if (item.depart_name == res.selectedDepart){
             let depart_id = item.depart_id;
             return callback(depart_id);
@@ -347,7 +334,6 @@ function checkDepartMatch(res, callback){
 
 async function addEmployee(){
     await inquirer.prompt(addEmployeeQuestions).then(async res => {
-       
         let role_id = '';
         await checkRoleMatch(res, function(result){
             role_id = result;
@@ -368,7 +354,6 @@ function checkRoleMatch(res, callback){
     roles.forEach(function(item, index){
         if (item.title === res.role){
             let role_id = item.role_id;
-            console.log(role_id)
             return callback(role_id);
         } ;
     });
@@ -392,20 +377,49 @@ function displayResults(resp){
 
 async function selectManager(){
     await inquirer.prompt(selectManagerQuest).then(res => {
-        console.log("SUCCESS SELECTED MANAGER", res)
+        getSelectedManagerRoleId(res.manager);
+
+    })
+}
+
+
+async function getSelectedManagerRoleId(manager){
+    employees.forEach(function(item, index){
+        if (`${item.first_name} ${item.last_name}` == manager){
+            let employ_id = item.employ_id      
+            getManagerRoleId(employ_id);
+        };
+    });
+}
+
+async function getManagerRoleId(employ_id){
+    await connectDb.getQuery(`${queries.getManagerRoleById} ${employ_id};`, function(result){
+        roleId = result[0].role_id 
+        getDepartIdByManager(roleId);
+    })
+   
+}
+
+async function getDepartIdByManager(roleId){
+    await connectDb.getQuery(`${queries.getDepartIdByManager} ${roleId};`, function(result){
+        departId = result[0].depart_id;
+        viewEmployeesByManager(departId, roleId);
+    })
+}
+
+async function viewEmployeesByManager(departId, roleId){  
+    await connectDb.getQuery(`${queries.getEmplByMan} ${departId};`, function(result){
+        displayResults(result);
     })
 }
 
 // removes selected employee by employ_id
 async function selectEmployeeRemove(){
     await inquirer.prompt(selectEmployeeQuest).then(res => {
-        // let employ_id = ''
         checkEmployeeMatch(res, function(result){
             let employ_id = result;
             removeEmployee(employ_id);
-            //return employ_id;
-        });
-        
+        });   
     })
 }
 
@@ -448,7 +462,6 @@ async function updateEmployeeRole(employ_id, role_id){
 }
 
 async function removeEmployee(employ_id ){
-    
     connectDb.getQuery(`${queries.removeEmployee} ${employ_id}`, function(result){
     console.log('--------------');
     console.log("Employee Removed!");

@@ -36,6 +36,11 @@ module.exports = {
 
         removeDepart: `DELETE FROM department WHERE department.depart_id = `,
 
+        getManagerRoleById: ` SELECT role_id FROM employee WHERE employ_id = `,
+
+        getDepartIdByManager: `SELECT depart_id FROM employee_role WHERE role_id = `,
+
+        getEmplByMan: `SELECT e.first_name, e.last_name FROM employee e INNER JOIN employee_role r USING (role_id) WHERE r.depart_id = `,
     
                 },
 }
