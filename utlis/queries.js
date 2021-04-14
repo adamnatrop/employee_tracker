@@ -33,6 +33,9 @@ module.exports = {
         getLastDepartId: `SELECT depart_id FROM department ORDER BY depart_id DESC LIMIT 1;`,
 
         addDepartment: `INSERT INTO department (depart_id, depart_name) VALUES `,
+
+        removeDepart: `DELETE FROM department WHERE department.depart_id = `,
+
     
                 },
 }

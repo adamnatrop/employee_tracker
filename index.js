@@ -191,7 +191,7 @@ async function start(){
                 addDepartmentQuest();
                 break;
             case 'Remove Department':
-                
+                removeDepartQuest();
                 break;
 
             case 'Quit':
@@ -200,6 +200,42 @@ async function start(){
            
 
         };
+    });
+};
+
+
+async function removeDepartQuest(){
+    await inquirer.prompt({
+        type: 'list',
+        message: 'Select Department to Remove:',
+        name: 'removeDepartment',
+        choices: departmentName
+    }).then( async (res) => {
+        await checkDepartMatchRemove(res, function(result){
+            let depart_id = result;
+            console.log(depart_id)
+            removeDepartment(depart_id);
+        })
+    })
+}
+
+async function removeDepartment(depart_id){
+    await connectDb.getQuery(`${queries.removeDepart} ${depart_id}`, function(result){
+        console.log('--------------');
+        console.log("Department Removed!");
+        console.log('--------------');
+        start();
+        });
+}
+
+
+function checkDepartMatchRemove(res, callback){
+    console.log(res)
+    departments.forEach(function(item, index){
+        if (item.depart_name == res.removeDepartment){
+            let depart_id = item.depart_id;
+            return callback(depart_id);
+        } ;
     });
 };
 
