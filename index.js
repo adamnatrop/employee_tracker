@@ -27,6 +27,7 @@ const managerQuery = connectDb.getQuery(queries.getAllManagers, function(result)
 
 const employees = [];
 const employeesName = [];
+
 const employeeQuery = connectDb.getQuery(queries.allEmployees, function(result){
     result.forEach(function(item, index){
         employees.push(item);

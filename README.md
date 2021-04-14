@@ -7,6 +7,8 @@ Use this employee contact management system to view, add, delete Employees, Depa
 ## How to use
 To use this employee tracker, simply install the application. Using node in the terminal launch the applicaiton and start adding employees. Assign them to departments give them roles and salaries. Keep everything organized!
 
+Don't forget to add your own config folder and modify the credsExample.js file to use your own MySQL database username and password.
+
 ## Github Repo Link
 https://github.com/adamnatrop/employee_tracker
 
