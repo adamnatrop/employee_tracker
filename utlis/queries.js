@@ -28,7 +28,11 @@ module.exports = {
 
         getLastRoleId: `SELECT role_id FROM employee_role ORDER BY role_id DESC LIMIT 1;`,
 
-        removeRole: `DELETE FROM employee_role WHERE employee_role.role_id = `
+        removeRole: `DELETE FROM employee_role WHERE employee_role.role_id = `,
+
+        getLastDepartId: `SELECT depart_id FROM department ORDER BY depart_id DESC LIMIT 1;`,
+
+        addDepartment: `INSERT INTO department (depart_id, depart_name) VALUES `,
     
                 },
 }

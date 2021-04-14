@@ -188,10 +188,10 @@ async function start(){
                 });
                 break;
             case 'Add Department':
-
+                addDepartmentQuest();
                 break;
             case 'Remove Department':
-                console.log('Selected Remove Department');
+                
                 break;
 
             case 'Quit':
@@ -203,8 +203,34 @@ async function start(){
     });
 };
 
+async function addDepartmentQuest(){
+    await inquirer.prompt({
+        type: 'input',
+        message: 'Enter New Department Name',
+        name: 'newDepartment'
+    }).then( async (res) => {
+        await connectDb.getQuery(queries.getLastDepartId, function(result){
+            let lastDepartId = result[0];
+            let newDepartName = res;
+            addDepartment(lastDepartId, newDepartName)
+
+        })
+    })
+}
+
+async function addDepartment(depart_id, depart_name){
+    departId = depart_id.depart_id + 1000;
+    await connectDb.getQuery(`${queries.addDepartment} (${departId}, "${depart_name.newDepartment}");` , function(result){
+        console.log('--------------');
+        console.log("Department Added!");
+        console.log('--------------');
+        start();
+    })
+}
+
+
 async function selectRoleToRemove(){
-    await inquirer.prompt(removeRoleQuest).then(async res => {
+    await inquirer.prompt(removeRoleQuest).then(async (res) => {
         // let role_id = '';
         await checkRoleMatchRemove(res, function(result){
             let role_id = result;
