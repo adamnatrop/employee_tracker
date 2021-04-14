@@ -9,7 +9,7 @@ module.exports = {
 
         viewAllRoles: `SELECT * FROM employee_role`,
 
-        viewAllDepartmements: ` SELECT * FROM department`,
+        viewAllDepartments: ` SELECT * FROM department`,
 
         roles: `SELECT role_id, title FROM employee_role`,
 
@@ -24,7 +24,11 @@ module.exports = {
         
         removeEmployee: `DELETE FROM employee WHERE employee.employ_id = `,
 
-        
+        addRole: `INSERT INTO employee_role (role_id, title, salary, depart_id, is_manager) VALUES `,
 
+        getLastRoleId: `SELECT role_id FROM employee_role ORDER BY role_id DESC LIMIT 1;`,
+
+        removeRole: `DELETE FROM employee_role WHERE employee_role.role_id = `
+    
                 },
 }
